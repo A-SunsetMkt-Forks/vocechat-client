@@ -25,6 +25,6 @@ Map<String, dynamic> _$ChatServerPropertiesToJson(
     <String, dynamic>{
       'server_name': instance.serverName,
       'description': instance.description,
-      'config': instance.config,
-      'common_info': instance.commonInfo,
+      'config': instance.config?.toJson(),
+      'common_info': instance.commonInfo?.toJson(),
     };

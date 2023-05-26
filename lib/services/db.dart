@@ -203,6 +203,13 @@ CREATE TABLE IF NOT EXISTS contacts (
   FOREIGN KEY(uid) REFERENCES user_info(uid) ON DELETE CASCADE
 )
 ''');
+                await db.execute('''
+CREATE TABLE IF NOT EXISTS user_settings (
+  id TEXT NOT NULL,
+  'value' TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+)
+''');
               } catch (e) {
                 App.logger.warning(e);
               }

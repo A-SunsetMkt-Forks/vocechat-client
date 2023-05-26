@@ -4,7 +4,7 @@ import 'package:vocechat_client/api/models/admin/system/sys_common_info.dart';
 
 part 'chat_server_properties.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class ChatServerProperties {
   String serverName;
   String? description;

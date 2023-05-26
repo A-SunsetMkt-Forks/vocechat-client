@@ -6,15 +6,13 @@ import 'dart:math';
 import 'package:vocechat_client/api/models/user/user_info.dart';
 import 'package:vocechat_client/app.dart';
 import 'package:vocechat_client/dao/dao.dart';
-import 'package:simple_logger/simple_logger.dart';
-import 'package:vocechat_client/dao/org_dao/properties_models/userdb_properties.dart';
 
 /// Contains user-specific data.
 class UserDbM with M {
   // @override
   // List<Object?> get props => [url];
 
-  /// 用户 id
+  /// user id
   int uid = -1;
 
   /// UserInfo json
@@ -50,14 +48,6 @@ class UserDbM with M {
 
   UserInfo get userInfo {
     return UserInfo.fromJson(jsonDecode(info));
-  }
-
-  UserDbProperties get properties {
-    return UserDbProperties.fromJson(jsonDecode(_properties));
-  }
-
-  set properties(UserDbProperties p) {
-    _properties = jsonEncode(p);
   }
 
   UserDbM();
@@ -168,7 +158,6 @@ class UserDbM with M {
 
 class UserDbMDao extends OrgDao<UserDbM> {
   static final UserDbMDao dao = UserDbMDao._p();
-  final _logger = SimpleLogger();
 
   UserDbMDao._p() {
     UserDbM.meta;
@@ -189,7 +178,7 @@ class UserDbMDao extends OrgDao<UserDbM> {
     } else {
       await super.add(m);
     }
-    _logger.info("UserDb saved. Id: ${m.id}");
+    App.logger.info("UserDb saved. Id: ${m.id}");
     return m;
   }
 
@@ -225,10 +214,6 @@ class UserDbMDao extends OrgDao<UserDbM> {
     return super.get(id);
   }
 
-  Future<UserDbM?> getUserDbByUid(int uid) async {
-    return first(where: '${UserDbM.F_uid} = ?', whereArgs: [uid]);
-  }
-
   /// Get maxMid of current user. This mid includes reactions, which can't be
   /// retrieved by calculating the max mid from ChatMsg table.
   ///
@@ -247,7 +232,7 @@ class UserDbMDao extends OrgDao<UserDbM> {
       old.expiredIn = expiredIn;
       old.updatedAt = DateTime.now().millisecondsSinceEpoch;
       await super.update(old);
-      _logger.config(
+      App.logger.config(
           "UserDb Auth updated. id:$id, Token:$token, rToken:$refreshToken, exp:$expiredIn");
     } else {
       throw Exception("No matching UserDb found");
@@ -262,7 +247,7 @@ class UserDbMDao extends OrgDao<UserDbM> {
       old.maxMid = max(old.maxMid, maxMid);
       // old.updatedAt = DateTime.now().millisecondsSinceEpoch;
       await super.update(old);
-      _logger.config("UserDb maxMid updated. maxMid :${old.maxMid}");
+      App.logger.config("UserDb maxMid updated. maxMid :${old.maxMid}");
     } else {
       throw Exception("No matching UserDb found");
     }
@@ -276,7 +261,7 @@ class UserDbMDao extends OrgDao<UserDbM> {
       old.usersVersion = version;
       // old.updatedAt = DateTime.now().millisecondsSinceEpoch;
       await super.update(old);
-      _logger.config("UserDb UsersVersion updated. Version:$version");
+      App.logger.config("UserDb UsersVersion updated. Version:$version");
     } else {
       throw Exception("No matching UserDb found");
     }
@@ -291,7 +276,7 @@ class UserDbMDao extends OrgDao<UserDbM> {
       old.token = "";
       old.refreshToken = "";
       await super.update(old);
-      _logger.config("UserDb LoggedIn => false");
+      App.logger.config("UserDb LoggedIn => false");
     } else {
       throw Exception("UpdateWhenLogout Failed.");
     }

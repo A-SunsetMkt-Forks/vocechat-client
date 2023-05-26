@@ -17,6 +17,7 @@ import 'package:vocechat_client/app.dart';
 import 'package:vocechat_client/dao/init_dao/contacts.dart';
 import 'package:vocechat_client/dao/init_dao/dm_info.dart';
 import 'package:vocechat_client/dao/init_dao/reaction.dart';
+import 'package:vocechat_client/dao/init_dao/user_settings.dart';
 import 'package:vocechat_client/services/file_handler/audio_file_handler.dart';
 import 'package:vocechat_client/services/sse/sse.dart';
 import 'package:vocechat_client/services/sse/sse_queue.dart';
@@ -679,16 +680,12 @@ class VoceChatService {
 
         if (uid != null) {
           ssePinnedUids.add(uid);
-          final user = await userInfoDao.getUserByUid(uid);
-          if (user != null) {
-            await userInfoDao.updateProperties(uid, pinnedAt: updatedAt);
-          }
+
+          await userInfoDao.updateProperties(uid, pinnedAt: updatedAt);
         } else if (gid != null) {
           ssePinnedGids.add(gid);
-          final group = await groupInfoDao.getGroupByGid(gid);
-          if (group != null) {
-            await groupInfoDao.updateProperties(gid, pinnedAt: updatedAt);
-          }
+
+          await groupInfoDao.updateProperties(gid, pinnedAt: updatedAt);
         }
       }
 
@@ -988,6 +985,13 @@ class VoceChatService {
 
   Future<void> _handleUserSettings(Map<String, dynamic> map) async {
     assert(map["type"] == sseUserSettings);
+
+    await UserSettingsDao().updateFromSse(map);
+  }
+
+  /*
+  Future<void> _handleUserSettings(Map<String, dynamic> map) async {
+    assert(map["type"] == sseUserSettings);
     {
       // read index groups
       final readIndexGroups = map["read_index_groups"] as List?;
@@ -1111,6 +1115,7 @@ class VoceChatService {
       }
     }
   }
+*/
 
   Future<void> _handleUserSettingsChanged(Map<String, dynamic> map) async {
     assert(map['type'] == sseUserSettingsChanged);
