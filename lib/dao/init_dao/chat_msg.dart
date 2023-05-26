@@ -14,6 +14,7 @@ import 'package:vocechat_client/dao/dao.dart';
 import 'package:vocechat_client/dao/init_dao/group_info.dart';
 import 'package:vocechat_client/dao/init_dao/reaction.dart';
 import 'package:vocechat_client/dao/init_dao/user_info.dart';
+import 'package:vocechat_client/dao/init_dao/user_settings.dart';
 import 'package:vocechat_client/models/local_kits.dart';
 import 'package:vocechat_client/services/task_queue.dart';
 
@@ -711,8 +712,10 @@ class ChatMsgDao extends Dao<ChatMsgM> {
   }
 
   Future<int> getGroupUnreadCount(int gid) async {
+    // final readIndex =
+    //     (await GroupInfoDao().getGroupByGid(gid))?.properties.readIndex;
     final readIndex =
-        (await GroupInfoDao().getGroupByGid(gid))?.properties.readIndex;
+        (await UserSettingsDao().getUserSettings())?.readIndexGroups[gid];
     if (readIndex != null) {
       String sqlStr =
           'SELECT COUNT(${ChatMsgM.F_mid}) FROM ${ChatMsgM.F_tableName} WHERE ${ChatMsgM.F_gid}=$gid AND ${ChatMsgM.F_mid}>$readIndex AND ${ChatMsgM.F_fromUid}!=${App.app.userDb!.uid}';
@@ -731,8 +734,10 @@ class ChatMsgDao extends Dao<ChatMsgM> {
   /// If there are multiple mentions inside one message, only count as mentioned once.
   Future<int> getGroupUnreadMentionCount(int gid) async {
     try {
+      // final readIndex =
+      //     (await GroupInfoDao().getGroupByGid(gid))?.properties.readIndex;
       final readIndex =
-          (await GroupInfoDao().getGroupByGid(gid))?.properties.readIndex;
+          (await UserSettingsDao().getUserSettings())?.readIndexGroups[gid];
       // print(readIndex);
       int count = 0;
       if (readIndex != null) {

@@ -290,25 +290,25 @@ class GroupInfoDao extends Dao<GroupInfoM> {
         await first(where: '${GroupInfoM.F_gid} = ?', whereArgs: [gid]);
     if (old != null) {
       GroupProperties oldProperties = old.properties;
-      if (burnAfterReadSecond != null) {
-        oldProperties.burnAfterReadSecond = burnAfterReadSecond;
-      }
+      // if (burnAfterReadSecond != null) {
+      //   oldProperties.burnAfterReadSecond = burnAfterReadSecond;
+      // }
 
-      if (enableMute != null) {
-        oldProperties.enableMute = enableMute;
-      }
+      // if (enableMute != null) {
+      //   oldProperties.enableMute = enableMute;
+      // }
 
-      if (muteExpiresAt != null) {
-        old.properties.muteExpiresAt = muteExpiresAt;
-      }
+      // if (muteExpiresAt != null) {
+      //   old.properties.muteExpiresAt = muteExpiresAt;
+      // }
 
-      if (readIndex != null) {
-        if (oldProperties.readIndex == -1) {
-          oldProperties.readIndex = readIndex;
-        } else {
-          oldProperties.readIndex = max(oldProperties.readIndex, readIndex);
-        }
-      }
+      // if (readIndex != null) {
+      //   if (oldProperties.readIndex == -1) {
+      //     oldProperties.readIndex = readIndex;
+      //   } else {
+      //     oldProperties.readIndex = max(oldProperties.readIndex, readIndex);
+      //   }
+      // }
 
       if (draft != null) {
         oldProperties.draft = draft;

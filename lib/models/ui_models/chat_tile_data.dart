@@ -4,6 +4,7 @@ import 'package:vocechat_client/app_consts.dart';
 import 'package:vocechat_client/dao/init_dao/chat_msg.dart';
 import 'package:vocechat_client/dao/init_dao/group_info.dart';
 import 'package:vocechat_client/dao/init_dao/user_info.dart';
+import 'package:vocechat_client/dao/init_dao/user_settings.dart';
 import 'package:vocechat_client/globals.dart';
 import 'package:vocechat_client/main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -134,9 +135,12 @@ class ChatTileData {
     mentionsCount.value =
         await ChatMsgDao().getGroupUnreadMentionCount(groupInfo.gid);
 
-    isMuted.value = properties.muteExpiresAt != null &&
-        properties.muteExpiresAt! > 0 &&
-        properties.muteExpiresAt! > DateTime.now().millisecondsSinceEpoch;
+    final userSettings = await UserSettingsDao().getUserSettings();
+    isMuted.value =
+        userSettings?.muteGroups.containsKey(groupInfo.gid) ?? false;
+    // isMuted.value = properties.muteExpiresAt != null &&
+    //     properties.muteExpiresAt! > 0 &&
+    //     properties.muteExpiresAt! > DateTime.now().millisecondsSinceEpoch;
 
     pinnedAt = properties.pinnedAt ?? -1;
     isPinned.value = properties.pinnedAt != null && properties.pinnedAt! > 0;

@@ -22,6 +22,7 @@ import 'package:vocechat_client/app_consts.dart';
 import 'package:vocechat_client/dao/init_dao/chat_msg.dart';
 import 'package:vocechat_client/dao/init_dao/group_info.dart';
 import 'package:vocechat_client/dao/init_dao/user_info.dart';
+import 'package:vocechat_client/dao/init_dao/user_settings.dart';
 import 'package:vocechat_client/main.dart';
 import 'package:vocechat_client/models/local_kits.dart';
 import 'package:vocechat_client/services/file_handler.dart';
@@ -296,9 +297,12 @@ class VoceSendService {
 
   Future<void> sendChannelText(int gid, String content,
       {String? resendLocalMid}) async {
-    final expiresIn = (await GroupInfoDao().getGroupByGid(gid))
-        ?.properties
-        .burnAfterReadSecond;
+    // final expiresIn = (await GroupInfoDao().getGroupByGid(gid))
+    //     ?.properties
+    //     .burnAfterReadSecond;
+    final expiresIn = (await UserSettingsDao().getUserSettings())
+        ?.burnAfterReadingGroups[gid];
+
     final regex = RegExp(r'\s@[0-9]+\s');
     List<int> mentions = [];
     for (var each in regex.allMatches(content)) {
@@ -362,9 +366,12 @@ class VoceSendService {
 
   Future<void> sendChannelReply(int gid, int targetMid, String content,
       {String? resendLocalMid}) async {
-    final expiresIn = (await GroupInfoDao().getGroupByGid(gid))
-        ?.properties
-        .burnAfterReadSecond;
+    // final expiresIn = (await GroupInfoDao().getGroupByGid(gid))
+    //     ?.properties
+    //     .burnAfterReadSecond;
+
+    final expiresIn = (await UserSettingsDao().getUserSettings())
+        ?.burnAfterReadingGroups[gid];
 
     final regex = RegExp(r'\s@[0-9]+\s');
     List<int> mentions = [];
@@ -433,9 +440,11 @@ class VoceSendService {
       String? resendLocalMid}) async {
     final localMid = resendLocalMid ?? uuid();
     final fakeMid = await _getFakeMid();
-    final expiresIn = (await GroupInfoDao().getGroupByGid(gid))
-        ?.properties
-        .burnAfterReadSecond;
+    // final expiresIn = (await GroupInfoDao().getGroupByGid(gid))
+    //     ?.properties
+    //     .burnAfterReadSecond;
+    final expiresIn = (await UserSettingsDao().getUserSettings())
+        ?.burnAfterReadingGroups[gid];
 
     final chatMsgDao = ChatMsgDao();
 
@@ -525,9 +534,11 @@ class VoceSendService {
   Future<void> sendChannelAudio(int gid, String localMid, File file,
       {void Function(double progress)? progress}) async {
     final fakeMid = await _getFakeMid();
-    final expiresIn = (await GroupInfoDao().getGroupByGid(gid))
-        ?.properties
-        .burnAfterReadSecond;
+    // final expiresIn = (await GroupInfoDao().getGroupByGid(gid))
+    //     ?.properties
+    //     .burnAfterReadSecond;
+    final expiresIn = (await UserSettingsDao().getUserSettings())
+        ?.burnAfterReadingGroups[gid];
 
     final chatMsgDao = ChatMsgDao();
 
